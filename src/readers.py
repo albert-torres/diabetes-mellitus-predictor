@@ -26,5 +26,7 @@ class DatasetReader:
             ids.append(splited_line[0])
             symptoms.append(splited_line[1])
 
-        return pd.DataFrame(list(zip(ids, symptoms)), columns=['ID', 'symptoms'])
+        symptomps_df = pd.DataFrame(list(zip(ids, symptoms)), columns=['ID', 'symptoms'])
+        symptomps_df.drop_duplicates(inplace=True)
+        return symptomps_df
 
