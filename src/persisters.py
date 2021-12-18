@@ -38,12 +38,11 @@ class ModelPersister(Persister):
         directory_path = f'{cls.root_location}/{cls._get_directory_name()}'
         cls._create_directory(directory_path)
 
-        file_path = f'{directory_path}/{cls.get_model_name(model)}_{cls._get_current_time()}'
+        model_path = f'{directory_path}/{cls.get_model_name(model)}'
         if description is not None:
-            file_path = f"{file_path}_{description}"
+            model_path = f'{model_path}_{description}'
 
-        file_path = f'{directory_path}/{cls.get_model_name(model)}_{cls._get_current_time()}.pickle'
-        with open(file_path, 'wb') as f:
+        with open(f'{model_path}_{cls._get_current_time()}.pickle', 'wb') as f:
             pickle.dump(model, f)
 
     @staticmethod
