@@ -21,6 +21,15 @@ from src.transformers import DataframeTransformer
 pd.set_option('display.width', None)
 pd.set_option('display.max_columns', 20)
 
+
+def get_model_log_string(m, d=''):
+    log_string = f'\nModel: {ModelPersister.get_model_name(m)}'
+    if description:
+        log_string = f'{log_string} ({d})'
+
+    return log_string
+
+
 start = time.time()
 
 diabetes_df = DatasetReader.read_data('/data/diabetes.csv')
@@ -79,10 +88,7 @@ for model, description in classifiers:
 
     score = mean(cross_val_score(model, train_x, train_y))
     classifiers_scores.append(score)
-    log_string = f'\nModel: {ModelPersister.get_model_name(model)}'
-    if description:
-        log_string = f'{log_string} ({description})'
-    print(log_string)
+    print(get_model_log_string(model, description))
     print(f'Score: {score}')
 
 # Best model
@@ -90,7 +96,7 @@ best_model_idx = classifiers_scores.index(max(classifiers_scores))
 best_model = classifiers[best_model_idx][0].fit(train_x, train_y)
 pred_y = best_model.predict(test_x)
 print('\nBest model')
-print(f'Model: {ModelPersister.get_model_name(classifiers[best_model_idx])}')
+print(get_model_log_string(classifiers[best_model_idx][0], classifiers[best_model_idx][1]))
 print(f'Test accuracy score: {accuracy_score(test_y, pred_y)}')
 print(f'Test AUC score: {roc_auc_score(test_y, pred_y)}')
 
