@@ -21,12 +21,13 @@ class DatasetReader:
         ids = []
         symptoms = []
         for line in lines[1:]:
-            if len(splited_line := line.strip().split('\t')) < 2:
+            if len(split_line := line.strip().split('\t')) < 2:
                 continue
-            ids.append(splited_line[0])
-            symptoms.append(splited_line[1])
+            ids.append(split_line[0])
+            symptoms.append(split_line[1])
 
-        symptomps_df = pd.DataFrame(list(zip(ids, symptoms)), columns=['ID', 'symptoms'])
-        symptomps_df.drop_duplicates(inplace=True)
-        return symptomps_df
+        symptoms_df = pd.DataFrame(list(zip(ids, symptoms)), columns=['ID', 'symptoms'])
+        symptoms_df.drop_duplicates(inplace=True)
+
+        return symptoms_df
 
