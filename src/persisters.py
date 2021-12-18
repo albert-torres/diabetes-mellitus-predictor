@@ -39,7 +39,7 @@ class ModelPersister(Persister):
         cls._create_directory(directory_path)
 
         model_path = f'{directory_path}/{cls.get_model_name(model)}'
-        if description is not None:
+        if description:
             model_path = f'{model_path}_{description}'
 
         with open(f'{model_path}_{cls._get_current_time()}.pickle', 'wb') as f:
