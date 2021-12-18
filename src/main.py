@@ -14,7 +14,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
-from src.persisters import ModelPersister
+from src.persisters import DataPersister, ModelPersister
 from src.readers import DatasetReader
 from src.transformers import DataframeTransformer
 
@@ -44,11 +44,13 @@ print(measures_no_diabetes_df.head())
 measures_df = pd.concat([measures_diabetes_df, measures_no_diabetes_df], ignore_index=True)
 measures_df.fillna(0, inplace=True)
 measures_df.drop(['ID'], axis='columns', inplace=True)
+# Save processed data
+DataPersister.save(measures_df, 'train_test_dataset_001.csv')
+
 print(f"\nProcessed dataset: {measures_no_diabetes_df.size}")
 print(measures_df.head())
 
 # Training
-
 train, test = train_test_split(measures_df, test_size=0.2, random_state=5, stratify=measures_df.diabetes)
 train_x = train.loc[:, train.columns != 'diabetes']
 train_x = StandardScaler().fit_transform(train_x)
