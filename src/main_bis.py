@@ -28,7 +28,7 @@ symptoms_df = DatasetReader.read_symptoms('/data/sintomas.csv')
 
 # Grouping (Erase groups that have not all Pruebas done?)
 measures_diabetes_df = DataframeTransformer.split_dataframe_first_measures(diabetes_df, 1)
-measures_diabetes_df = DataframeTransformer.merge_dfs_on_column(measures_diabetes_df, symptoms_df, on='ID')
+measures_diabetes_df = DataframeTransformer.df_merge_left_on_column(measures_diabetes_df, symptoms_df, on='ID')
 measures_diabetes_df = measures_diabetes_df[
     (measures_diabetes_df['symptoms'] == 'Diabetes') |
     (measures_diabetes_df['symptoms'] == 'Diabetes, sobrepeso')

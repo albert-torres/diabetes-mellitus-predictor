@@ -3,10 +3,6 @@ import pandas as pd
 
 
 class DataframeTransformer:
-    @staticmethod
-    def merge_dfs_on_column(df1, df2, on):
-        return pd.merge(df1, df2, on=on)
-
     @classmethod
     def create_dataframe_from_group(cls, identifier, grp, has_diabetes):
         data = {
@@ -38,6 +34,21 @@ class DataframeTransformer:
     @staticmethod
     def get_dummies(df, columns):
         return pd.get_dummies(df, columns=columns)
+
+    @staticmethod
+    def _get_symptoms(df):
+        symptoms = []
+        for column in df.loc[:, df.columns != 'ID']:
+            symptoms.extend(df[column].unique())
+        symptoms = set(symptoms)
+        if np.nan in symptoms:
+            symptoms.remove(np.nan)
+
+        return list(symptoms)
+
+    @staticmethod
+    def df_merge_left_on_column(df_left, df_right, on):
+        return df_left.merge(df_right, on=on, how='left')
 
     @classmethod
     def split_dataframe(cls, df, target_value):
@@ -124,3 +135,21 @@ class DataframeTransformer:
         measures_diabetes_df.reset_index(drop=True, inplace=True)
 
         return measures_diabetes_df
+
+    @classmethod
+    def split_symptoms(cls, df):
+        symptom_columns = list(df.columns)
+        symptom_columns.remove('ID')
+        split_symptoms_data = []
+        for idx, row in df.iterrows():
+            split_symptoms_row = {row[column]: 1 for column in symptom_columns if row[column] is not np.nan}
+            split_symptoms_row.update({'ID': row.ID})
+            split_symptoms_data.append(split_symptoms_row)
+        symptoms = cls._get_symptoms(df)
+        split_symptoms_df = pd.DataFrame(split_symptoms_data, columns=['ID'] + symptoms)
+        split_symptoms_df.fillna(0, inplace=True)
+        split_symptoms_df = split_symptoms_df.astype({column_name: 'int8' for column_name in symptoms})
+        split_symptoms_df.rename(columns={'diabetes': 'symptom_diabetes'}, inplace=True)
+
+        return split_symptoms_df
+

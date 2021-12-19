@@ -16,18 +16,13 @@ class DatasetReader:
 
     @staticmethod
     def read_symptoms(path):
-        with open(f'{ROOT_DIR}{path}') as f:
-            lines = f.readlines()
-        ids = []
-        symptoms = []
-        for line in lines[1:]:
-            if len(split_line := line.strip().split('\t')) < 2:
-                continue
-            ids.append(split_line[0])
-            symptoms.append(split_line[1])
+        df = pd.read_csv(f'{ROOT_DIR}{path}')
+        symptoms_column_names = [f'symptom_{n + 1}' for n in range(df.shape[1] - 1)]
+        df.columns = ['ID'] + symptoms_column_names
+        df.drop_duplicates(inplace=True)
+        df.reset_index(drop=True, inplace=True)
+        df[symptoms_column_names] = df[symptoms_column_names].applymap(
+            lambda x: x.strip().lower() if type(x) == str else x
+        )
 
-        symptoms_df = pd.DataFrame(list(zip(ids, symptoms)), columns=['ID', 'symptoms'])
-        symptoms_df.drop_duplicates(inplace=True)
-
-        return symptoms_df
-
+        return df

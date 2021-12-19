@@ -32,25 +32,27 @@ def get_model_log_string(m, d=''):
 
 start = time.time()
 
-diabetes_df = DatasetReader.read_data('/data/diabetes.csv')
-no_diabetes_df = DatasetReader.read_data('/data/no_diabetes.csv')
 symptoms_df = DatasetReader.read_symptoms('/data/sintomas.csv')
+extended_symptoms_df = DataframeTransformer.split_symptoms(symptoms_df)
+print('Symptoms')
+print(extended_symptoms_df.head())
 
+diabetes_df = DatasetReader.read_data('/data/diabetes.csv')
 measures_diabetes_df = DataframeTransformer.split_dataframe_first_measures(diabetes_df, 1)
-measures_diabetes_df = DataframeTransformer.merge_dfs_on_column(measures_diabetes_df, symptoms_df, on='ID')
-measures_diabetes_df = DataframeTransformer.get_dummies(measures_diabetes_df, ['Sexo', 'symptoms'])
+measures_diabetes_df = DataframeTransformer.get_dummies(measures_diabetes_df, ['Sexo'])
 measures_diabetes_df.dropna(inplace=True)
-print(f'N diabetes (diabetes=1): {measures_diabetes_df.size}')
+print(f'\nN diabetes (diabetes=1): {measures_diabetes_df.size}')
 print(measures_diabetes_df.head())
 
+no_diabetes_df = DatasetReader.read_data('/data/no_diabetes.csv')
 measures_no_diabetes_df = DataframeTransformer.split_dataframe_last_measures(no_diabetes_df, 0)
-measures_no_diabetes_df = DataframeTransformer.merge_dfs_on_column(measures_no_diabetes_df, symptoms_df, on='ID')
-measures_no_diabetes_df = DataframeTransformer.get_dummies(measures_no_diabetes_df, ['Sexo', 'symptoms'])
+measures_no_diabetes_df = DataframeTransformer.get_dummies(measures_no_diabetes_df, ['Sexo'])
 measures_no_diabetes_df.dropna(inplace=True)
 print(f'\nN no diabetes (diabetes=0): {measures_no_diabetes_df.size}')
 print(measures_no_diabetes_df.head())
 
 measures_df = pd.concat([measures_diabetes_df, measures_no_diabetes_df], ignore_index=True)
+measures_df = DataframeTransformer.df_merge_left_on_column(measures_df, extended_symptoms_df, on='ID')
 measures_df.fillna(0, inplace=True)
 measures_df.drop(['ID'], axis='columns', inplace=True)
 # Save processed data
