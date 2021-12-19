@@ -102,9 +102,4 @@ print(get_model_log_string(classifiers[best_model_idx][0], classifiers[best_mode
 print(f'Test accuracy score: {accuracy_score(test_y, pred_y)}')
 print(f'Test AUC score: {roc_auc_score(test_y, pred_y)}')
 
-# tree.plot_tree(dtc_model, proportion=True, ax=ax, fontsize=10, max_depth=3, filled=True, feature_names=c, class_names=['0', '1'])
-# plt.savefig('decision_tree.jpeg')
-# print(measures_diabetes_df.size)
-# print(measures_diabetes_df[:50])
-# print(measures_diabetes_df.size)
 print(f'\nElapsed time {time.time() - start}')
