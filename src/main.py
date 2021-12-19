@@ -22,9 +22,9 @@ pd.set_option('display.width', None)
 pd.set_option('display.max_columns', 20)
 
 
-def get_model_log_string(m, d=''):
+def get_model_log_string(m, d=None):
     log_string = f'\nModel: {ModelPersister.get_model_name(m)}'
-    if description:
+    if d:
         log_string = f'{log_string} ({d})'
 
     return log_string
