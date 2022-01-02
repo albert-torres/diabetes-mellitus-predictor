@@ -1,6 +1,7 @@
 .idea
 __pycache__
 
+data
 models
 processed_data
 src/.ipynb_checkpoints

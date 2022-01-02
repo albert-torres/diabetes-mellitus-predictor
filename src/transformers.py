@@ -148,8 +148,9 @@ class DataframeTransformer:
         symptoms = cls._get_symptoms(df)
         split_symptoms_df = pd.DataFrame(split_symptoms_data, columns=['ID'] + symptoms)
         split_symptoms_df.fillna(0, inplace=True)
-        split_symptoms_df = split_symptoms_df.astype({column_name: 'int8' for column_name in symptoms})
-        split_symptoms_df.rename(columns={'diabetes': 'symptom_diabetes'}, inplace=True)
+        split_symptoms_df = split_symptoms_df.astype({column_name: 'category' for column_name in symptoms})
+        split_symptoms_df.drop(columns=['diabetes'], inplace=True)
+        # split_symptoms_df.rename(columns={'diabetes': 'symptom_diabetes'}, inplace=True)
 
         return split_symptoms_df
 
